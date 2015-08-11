@@ -1,0 +1,31 @@
+kernix_forum_view:
+    path:      /advert/{id}
+    defaults:  { _controller: KernixForumBundle:Advert:view }
+    requirements:
+        id: \d+
+
+kernix_forum_add:
+    path:      /forum/add
+    defaults:  { _controller: KernixForumBundle:Advert:add }
+
+kernix_forum_view_slug:
+    path:      /forum/{year}/{slug}.{format}
+    defaults:  { _controller: KernixForumBundle:Advert:viewSlug }
+    requirements:
+        year:  \d{4}
+        format:  html|xml
+
+kernix_forum_home:
+    path:       /{page}
+    defaults:   { _controller:  KernixForumBundle:Advert:index, page:  1}
+    requirements:
+        page: \d*
+
+kernix_forum_edit:
+    path:     /forum/edit
+    defaults: { _controller: KernixForumBundle:Advert:edit }
+
+kernix_forum_delete:
+    path:     /forum/delete
+    defaults: { _controller: KernixForumBundle:Advert/delete }
+

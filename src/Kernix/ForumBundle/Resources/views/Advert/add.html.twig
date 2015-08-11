@@ -1,0 +1,21 @@
+{% extends "OCPlatformBundle::layout.html.twig" %}
+
+{% block body %}
+
+  <h2>Ajouter une annonce</h2>
+
+  {{ include("KernixForumBundle:Advert:form.html.twig") }}
+
+  <p>
+    Attention : cette annonce sera ajoutée directement
+    sur la page d'accueil après validation du formulaire.
+  </p>
+
+  <p>
+    <a href="{{ path('kernix_forum_view', {'id': advert.id}) }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-chevron-left"></i>
+      Publier l'annonce
+    </a>
+  </p>
+
+{% endblock %}
