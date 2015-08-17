@@ -56,6 +56,11 @@ class Advert
      */
     private $published = true;
 
+    /**
+   * @ORM\OneToOne(targetEntity="Kernix\ForumBundle\Entity\Image", cascade={"persist"})
+   * @ORM\JoinColumn(nullable=true)
+   */
+  private $image;
 
     /**
      * Get id
@@ -186,5 +191,28 @@ class Advert
     public function getPublished()
     {
         return $this->published;
+    }
+
+    /**
+     * Set image
+     *
+     * @param \Kernix\ForumBundle\Entity\Image $image
+     * @return Advert
+     */
+    public function setImage(\Kernix\ForumBundle\Entity\Image $image = null)
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * Get image
+     *
+     * @return \Kernix\ForumBundle\Entity\Image 
+     */
+    public function getImage()
+    {
+        return $this->image;
     }
 }
