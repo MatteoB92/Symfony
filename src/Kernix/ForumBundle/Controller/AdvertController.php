@@ -56,17 +56,30 @@ class AdvertController extends Controller
   // Ajoutez cette méthode :
   public function addAction(Request $request)
   {
-    $session = $request->getSession();
-    
-    // Mais faisons comme si c'était le cas
-    $session->getFlashBag()->add('info', 'Annonce bien enregistrée');
+    // Création de l'entité
+    $advert = new Advert();
+    $advert->setTitle('Recherche développeur Symfony2.');
+    $advert->setAuthor('Alexandre');
+    $advert->setContent("Nous recherchons un développeur Symfony2 débutant sur Lyon. Blabla…");
+    // On peut ne pas définir ni la date ni la publication,
+    // car ces attributs sont définis automatiquement dans le constructeur
 
-    // Le « flashBag » est ce qui contient les messages flash dans la session
-    // Il peut bien sûr contenir plusieurs messages :
-    $session->getFlashBag()->add('info', 'Oui oui, il est bien enregistré !');
+    // On récupère l'EntityManager
+    $em = $this->getDoctrine()->getManager();
 
-    // Puis on redirige vers la page de visualisation de cette annonce
-    return $this->redirect($this->generateUrl('kernix_forum_view', array('id' => 5)));
+    // Étape 1 : On « persiste » l'entité
+    $em->persist($advert);
+
+    // Étape 2 : On « flush » tout ce qui a été persisté avant
+    $em->flush();
+
+    // Reste de la méthode qu'on avait déjà écrit
+    if ($request->isMethod('POST')) {
+      $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
+      return $this->redirect($this->generateUrl('kernix_forum_view', array('id' => $advert->getId())));
+    }
+
+    return $this->render('KernixForumBundle:Advert:add.html.twig');
   }
 
     public function menuAction()
@@ -98,20 +111,6 @@ class AdvertController extends Controller
 
     return $this->render('KernixForumBundle:Advert:edit.html.twig', array('advert' => $advert)
     );
-  }
-
-  public function addAction(Request $request)
-  {
-    // On récupère le service
-    $antispam = $this->container->get('oc_platform.antispam');
-
-    // Je pars du principe que $text contient le texte d'un message quelconque
-    $text = '...';
-    if ($antispam->isSpam($text)) {
-      throw new \Exception('Votre message a été détecté comme spam !');
-    }
-    
-    // Ici le message n'est pas un spam
   }
 
 }
