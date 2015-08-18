@@ -5,6 +5,8 @@ namespace Kernix\ForumBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use OC\PlatformBundle\Entity\Advert;
+use OC\PlatformBundle\Entity\Image;
 
 
 class AdvertController extends Controller
@@ -40,16 +42,27 @@ class AdvertController extends Controller
 
     public function viewAction($id)
     {
-     $advert = array(
-      'title'   => 'Recherche développpeur Symfony2',
-      'id'      => $id,
-      'author'  => 'Alexandre',
-      'content' => 'Nous recherchons un développeur Symfony2 débutant sur Lyon. Blabla…',
-      'date'    => new \Datetime()
-    );
+    $em = $this->getDoctrine()->getManager();
+
+    // On récupère l'annonce $id
+    $advert = $em
+      ->getRepository('KernixForumBundle:Advert')
+      ->find($id)
+    ;
+
+    if (null === $advert) {
+      throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
+    }
+
+    // On récupère la liste des candidatures de cette annonce
+    $listMessages = $em
+      ->getRepository('KernixForumBundle:Message')
+      ->findBy(array('advert' => $advert))
+    ;
 
     return $this->render('KernixForumBundle:Advert:view.html.twig', array(
-      'advert' => $advert
+      'advert'           => $advert,
+      'listMessages' => $listMessages
     ));
   }
     
@@ -64,11 +77,35 @@ class AdvertController extends Controller
     // On peut ne pas définir ni la date ni la publication,
     // car ces attributs sont définis automatiquement dans le constructeur
 
+    // Création d'une première candidature
+    $message1 = new Message();
+    $message1->setAuthor('Marine');
+    $message1->setContent("J'ai toutes les qualités requises.");
+
+    // Création d'une deuxième candidature par exemple
+    $message2 = new Message();
+    $message2->setAuthor('Pierre');
+    $message2->setContent("Je suis très motivé.");
+
+    // On lie les candidatures à l'annonce
+    $message1->setAdvert($advert);
+    $message2->setAdvert($advert);
+
+
+    $Image= new Image();
+    $image->setUrl('http://sdz-upload.s3.amazonaws.com/prod/upload/job-de-reve.jpg');
+    $image->setAlt('Meilleur topic !');
+
+    $Advert->setImage($image);
+
     // On récupère l'EntityManager
     $em = $this->getDoctrine()->getManager();
 
     // Étape 1 : On « persiste » l'entité
     $em->persist($advert);
+
+    $em<>persist($message1);
+    $em<>persist($message2);
 
     // Étape 2 : On « flush » tout ce qui a été persisté avant
     $em->flush();
