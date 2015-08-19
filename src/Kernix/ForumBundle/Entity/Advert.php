@@ -3,6 +3,7 @@
 namespace Kernix\ForumBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Advert
@@ -57,10 +58,16 @@ class Advert
     private $published = true;
 
     /**
-   * @ORM\OneToOne(targetEntity="Kernix\ForumBundle\Entity\Image", cascade={"persist"})
-   * @ORM\JoinColumn(nullable=true)
-   */
-  private $image;
+     * @ORM\OneToOne(targetEntity="Kernix\ForumBundle\Entity\Image", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $image;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Kernix\ForumBundle\Entity\Category", cascade={"persist"})
+     */
+    private $categories;
+
 
     /**
      * Get id
@@ -166,8 +173,8 @@ class Advert
 
     public function __construct()
     {
-        // Par défaut, la date de l'annonce est la date d'aujourd'hui
         $this->date = new \Datetime();
+        $this->categories = new ArrayCollection();
     } 
 
     /**
@@ -214,5 +221,38 @@ class Advert
     public function getImage()
     {
         return $this->image;
+    }
+
+    /**
+     * Add categories
+     *
+     * @param \Kernix\ForumBundle\Entity\Category $categories
+     * @return Advert
+     */
+    public function addCategory(\Kernix\ForumBundle\Entity\Category $categories)
+    {
+        $this->categories[] = $categories;
+
+        return $this;
+    }
+
+    /**
+     * Remove categories
+     *
+     * @param \Kernix\ForumBundle\Entity\Category $categories
+     */
+    public function removeCategory(\Kernix\ForumBundle\Entity\Category $categories)
+    {
+        $this->categories->removeElement($categories);
+    }
+
+    /**
+     * Get categories
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getCategories()
+    {
+        return $this->categories;
     }
 }

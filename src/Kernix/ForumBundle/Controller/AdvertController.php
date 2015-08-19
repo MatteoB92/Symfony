@@ -66,7 +66,6 @@ class AdvertController extends Controller
     ));
   }
     
-  // Ajoutez cette méthode :
   public function addAction(Request $request)
   {
     // Création de l'entité
