@@ -30,12 +30,21 @@
     </a>
     <a href="{{ path('kernix_forum_delete', {'id': advert.id}) }}" class="btn btn-danger">
       <i class="glyphicon glyphicon-trash"></i>
-      Supprimer l'annonce
+      Supprimer le topic
     </a>
   </p>
 
   {% if advert.image is not null %}
     <img src="{{ advert.image.url }}" alt="{{ advert.image.alt }}">
   {% endif %}
+
+  {% if not advert.categories.empty %}
+  <p>
+    Ce Topic est parue dans les catégories suivantes :
+    {% for category in advert.categories %}
+      {{ category.name }}{% if not loop.last %}, {% endif %}
+    {% endfor %}
+  </p>
+{% endif %}
 
 {% endblock %}
