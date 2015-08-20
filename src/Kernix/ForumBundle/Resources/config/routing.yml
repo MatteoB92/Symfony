@@ -5,11 +5,11 @@ kernix_forum_view:
         id: \d+
 
 kernix_forum_add:
-    path:      /forum/add
+    path:      /add
     defaults:  { _controller: KernixForumBundle:Advert:add }
 
 kernix_forum_view_slug:
-    path:      /forum/{year}/{slug}.{format}
+    path:      /{year}/{slug}.{format}
     defaults:  { _controller: KernixForumBundle:Advert:viewSlug }
     requirements:
         year:  \d{4}
@@ -22,10 +22,13 @@ kernix_forum_home:
         page: \d*
 
 kernix_forum_edit:
-    path:     /forum/edit
+    path:     /edit
     defaults: { _controller: KernixForumBundle:Advert:edit }
+    requirements:
+        id: \d+
 
 kernix_forum_delete:
-    path:     /forum/delete
+    path:     /delete
     defaults: { _controller: KernixForumBundle:Advert/delete }
-
+    requirements:
+        id: \d+

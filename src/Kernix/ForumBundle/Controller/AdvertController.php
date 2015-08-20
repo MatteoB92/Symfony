@@ -5,9 +5,12 @@ namespace Kernix\ForumBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use OC\PlatformBundle\Entity\Advert;
-use OC\PlatformBundle\Entity\Image;
-
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Kernix\ForumBundle\Entity\Advert;
+use Kernix\ForumBundle\Entity\Image;
+use Kernix\ForumBundle\Entity\Message;
+use Kernix\ForumBundle\Entity\Skill;
+use Kernix\ForumBundle\Entity\Category;
 
 class AdvertController extends Controller
 {
@@ -35,7 +38,7 @@ class AdvertController extends Controller
     );
 
     // Et modifiez le 2nd argument pour injecter notre liste
-    return $this->render('KernixForumBundle:Advert:index.html.twig', array(
+    return $this->get('templating')->renderResponse('KernixForumBundle:Advert:index.html.twig', array(
       'listAdverts' => $listAdverts
     ));
     }
@@ -91,11 +94,11 @@ class AdvertController extends Controller
     $message2->setAdvert($advert);
 
 
-    $Image= new Image();
-    $image->setUrl('http://sdz-upload.s3.amazonaws.com/prod/upload/job-de-reve.jpg');
+    $image= new Image();
+    $image->setUrl('http://www.ac-grenoble.fr/ien.vienne1-2/spip/IMG/bmp_Image004.bmp');
     $image->setAlt('Meilleur topic !');
 
-    $Advert->setImage($image);
+    $advert->setImage($image);
 
     // On récupère l'EntityManager
     $em = $this->getDoctrine()->getManager();
